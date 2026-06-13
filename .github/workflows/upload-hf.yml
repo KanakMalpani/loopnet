@@ -1,0 +1,40 @@
+name: Upload to Hugging Face
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_id:
+        description: HuggingFace dataset repo id
+        required: true
+        default: KanakMalpani/loopnet-seed-v0.1
+      private:
+        description: Private dataset
+        type: boolean
+        default: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Validate corpus
+        run: python scripts/validate_record.py --require-count 500
+
+      - name: Upload to Hugging Face Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -e
+          ARGS="--export-parquet --upload --repo-id ${{ github.event.inputs.repo_id }}"
+          if [ "${{ github.event.inputs.private }}" = "true" ]; then
+            ARGS="$ARGS --private"
+          fi
+          python scripts/upload_hf.py $ARGS

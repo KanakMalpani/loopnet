@@ -9,8 +9,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/loop-engineering/loopnet"
-Documentation = "https://github.com/loop-engineering/loop-engineering-core"
+Homepage = "https://github.com/KanakMalpani/loopnet"
+Repository = "https://github.com/KanakMalpani/loopnet"
+Documentation = "https://github.com/KanakMalpani/loopnet/blob/main/DATACARD.md"
+"Loop Core Engineering" = "https://github.com/KanakMalpani/Loop-Core-Engineering"
+"LoopGym" = "https://github.com/KanakMalpani/LoopGym"
 
 # Spec pins (01-loop-engineering-core): lss@1.0.0, les@1.0.0 — see schema spec_pins field
 

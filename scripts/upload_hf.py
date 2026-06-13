@@ -55,22 +55,20 @@ size_categories:
 
 # LoopNet Seed v0.1
 
-Synthetic seed corpus for [LoopNet](https://github.com/loop-engineering/loopnet).
+Synthetic seed corpus for [LoopNet](https://github.com/KanakMalpani/loopnet).
 
 ## Load
 
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("json", data_files="records.jsonl", split="train")
+ds = load_dataset("KanakMalpani/loopnet-seed-v0.1", split="train")
 ```
 
-Or from this directory after `python scripts/upload_hf.py --export-parquet`:
+Or from JSONL in this repo:
 
 ```python
-from datasets import load_dataset
-
-ds = load_dataset("parquet", data_files="records.parquet", split="train")
+ds = load_dataset("json", data_files="records.jsonl", split="train")
 ```
 
 ## Schema
@@ -139,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--readme", type=Path, default=DEFAULT_README)
     parser.add_argument("--export-parquet", action="store_true")
     parser.add_argument("--upload", action="store_true")
-    parser.add_argument("--repo-id", default="loop-engineering/loopnet-seed-v0.1")
+    parser.add_argument("--repo-id", default="KanakMalpani/loopnet-seed-v0.1")
     parser.add_argument("--private", action="store_true")
     args = parser.parse_args(argv)
 

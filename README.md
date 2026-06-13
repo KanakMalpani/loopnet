@@ -49,12 +49,20 @@ records = [json.loads(line) for line in open("data/seed/records.jsonl")]
 train = [r for r in records if r["split"] == "train"]
 ```
 
-With HuggingFace Datasets:
+With HuggingFace Datasets (after [Hub upload](PUBLISHING.md) or from GitHub raw):
 
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("json", data_files="data/seed/records.jsonl", split="train")
+# From GitHub (no HF required)
+ds = load_dataset(
+    "json",
+    data_files="https://raw.githubusercontent.com/KanakMalpani/loopnet/main/data/seed/records.jsonl",
+    split="train",
+)
+
+# After Hugging Face publish
+# ds = load_dataset("KanakMalpani/loopnet-seed-v0.1", split="train")
 ```
 
 ---
