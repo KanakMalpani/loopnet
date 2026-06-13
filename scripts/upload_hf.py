@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""Prepare LoopNet seed corpus for HuggingFace Hub upload (optional)."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_JSONL = ROOT / "data" / "seed" / "records.jsonl"
+DEFAULT_PARQUET = ROOT / "data" / "seed" / "records.parquet"
+DEFAULT_README = ROOT / "data" / "seed" / "README.md"
+
+
+def export_parquet(jsonl_path: Path, parquet_path: Path) -> None:
+    try:
+        import pandas as pd
+    except ImportError as exc:
+        raise SystemExit(
+            "pandas and pyarrow required: pip install -e '.[dev]'"
+        ) from exc
+
+    records = []
+    with jsonl_path.open(encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if line:
+                records.append(json.loads(line))
+
+    frame = pd.json_normalize(records, sep=".")
+    parquet_path.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_parquet(parquet_path, index=False)
+    print(f"Wrote {len(records)} records to {parquet_path}")
+
+
+def write_dataset_card(readme_path: Path) -> None:
+    readme_path.parent.mkdir(parents=True, exist_ok=True)
+    readme_path.write_text(
+        """---
+language:
+- en
+license: cc-by-4.0
+task_categories:
+- text-classification
+- other
+tags:
+- loop-engineering
+- agents
+- benchmarks
+size_categories:
+- n<1K
+---
+
+# LoopNet Seed v0.1
+
+Synthetic seed corpus for [LoopNet](https://github.com/loop-engineering/loopnet).
+
+## Load
+
+```python
+from datasets import load_dataset
+
+ds = load_dataset("json", data_files="records.jsonl", split="train")
+```
+
+Or from this directory after `python scripts/upload_hf.py --export-parquet`:
+
+```python
+from datasets import load_dataset
+
+ds = load_dataset("parquet", data_files="records.parquet", split="train")
+```
+
+## Schema
+
+Records conform to `ln/record-v1` (see `schema/loopnet-record-v1.json`).
+
+## Citation
+
+```bibtex
+@dataset{loopnet_seed_v01,
+  title={LoopNet Seed Corpus v0.1},
+  year={2026},
+  publisher={Loop Engineering}
+}
+```
+""",
+        encoding="utf-8",
+    )
+    print(f"Wrote dataset card to {readme_path}")
+
+
+def upload_to_hub(
+    repo_id: str,
+    jsonl_path: Path,
+    parquet_path: Path | None,
+    readme_path: Path,
+    *,
+    private: bool,
+) -> None:
+    try:
+        from huggingface_hub import HfApi
+    except ImportError as exc:
+        raise SystemExit(
+            "huggingface_hub required: pip install -e '.[dev]'"
+        ) from exc
+
+    api = HfApi()
+    api.create_repo(repo_id, repo_type="dataset", private=private, exist_ok=True)
+
+    api.upload_file(
+        path_or_fileobj=str(jsonl_path),
+        path_in_repo="records.jsonl",
+        repo_id=repo_id,
+        repo_type="dataset",
+    )
+    if parquet_path and parquet_path.exists():
+        api.upload_file(
+            path_or_fileobj=str(parquet_path),
+            path_in_repo="records.parquet",
+            repo_id=repo_id,
+            repo_type="dataset",
+        )
+    api.upload_file(
+        path_or_fileobj=str(readme_path),
+        path_in_repo="README.md",
+        repo_id=repo_id,
+        repo_type="dataset",
+    )
+    print(f"Uploaded dataset to https://huggingface.co/datasets/{repo_id}")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--jsonl", type=Path, default=DEFAULT_JSONL)
+    parser.add_argument("--parquet", type=Path, default=DEFAULT_PARQUET)
+    parser.add_argument("--readme", type=Path, default=DEFAULT_README)
+    parser.add_argument("--export-parquet", action="store_true")
+    parser.add_argument("--upload", action="store_true")
+    parser.add_argument("--repo-id", default="loop-engineering/loopnet-seed-v0.1")
+    parser.add_argument("--private", action="store_true")
+    args = parser.parse_args(argv)
+
+    if not args.jsonl.exists():
+        print(f"Missing seed file: {args.jsonl}", file=sys.stderr)
+        return 1
+
+    write_dataset_card(args.readme)
+
+    if args.export_parquet or args.upload:
+        export_parquet(args.jsonl, args.parquet)
+
+    if args.upload:
+        upload_to_hub(
+            args.repo_id,
+            args.jsonl,
+            args.parquet if args.parquet.exists() else None,
+            args.readme,
+            private=args.private,
+        )
+    else:
+        print("Prepared local HuggingFace assets. Pass --upload to push to the Hub.")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

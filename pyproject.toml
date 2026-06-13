@@ -1,0 +1,33 @@
+[project]
+name = "loopnet"
+version = "0.1.0"
+description = "LoopNet — large-scale dataset of loop designs, trajectories, and outcomes"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "jsonschema>=4.21",
+]
+
+[project.urls]
+Homepage = "https://github.com/loop-engineering/loopnet"
+Documentation = "https://github.com/loop-engineering/loop-engineering-core"
+
+# Spec pins (01-loop-engineering-core): lss@1.0.0, les@1.0.0 — see schema spec_pins field
+
+[project.optional-dependencies]
+dev = [
+    "datasets>=2.19",
+    "huggingface_hub>=0.23",
+    "pandas>=2.2",
+    "pyarrow>=16.0",
+]
+notebook = [
+    "scikit-learn>=1.5",
+    "pandas>=2.2",
+    "matplotlib>=3.9",
+    "jupyter>=1.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
