@@ -1,41 +1,89 @@
-<p align="center">
-  <strong>LoopNet</strong><br>
-  <em>The ImageNet of Loop Engineering.</em>
-</p>
+<div align="center">
 
-<p align="center">
-  <a href="https://github.com/KanakMalpani/loopnet/actions/workflows/validate.yml"><img src="https://github.com/KanakMalpani/loopnet/actions/workflows/validate.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/Code-MIT-yellow.svg" alt="MIT"></a>
-  <a href="DATACARD.md"><img src="https://img.shields.io/badge/Dataset-CC%20BY%204.0-green.svg" alt="CC BY 4.0"></a>
-  <img src="https://img.shields.io/badge/records-500-blue.svg" alt="500 records">
-  <img src="https://img.shields.io/badge/failures-42%25-red.svg" alt="42% failure rate">
-  <a href="schema/loopnet-record-v1.json"><img src="https://img.shields.io/badge/schema-ln%2Frecord--v1-orange.svg" alt="ln/record-v1"></a>
-</p>
+# LoopNet
 
----
+**Ground truth for self-improving systems.**
 
-**LoopNet** is a structured corpus of loop designs, execution trajectories, outcomes, and failure modes — built so researchers and engineers can train, evaluate, and debug **self-improving systems** with real ground truth, not anecdotes.
+Structured loop designs, execution trajectories, outcomes, and failure modes — so you can train, evaluate, and debug loops with data, not anecdotes.
 
-Each record conforms to **`ln/record-v1`**, pins **`lss@1.0.0`** / **`les@1.0.0`**, and ships with train/val/test splits. v0.1 is a **500-record synthetic seed** with a deliberate **42% failure rate** so models learn what breaking looks like, not just success stories.
+<br>
 
-<p align="center">
-  <a href="#-load-in-3-lines"><strong>Load the data →</strong></a> ·
-  <a href="DATACARD.md">Data card</a> ·
-  <a href="PUBLISHING.md">Publish to Hugging Face</a>
-</p>
+[![CI](https://github.com/KanakMalpani/loopnet/actions/workflows/validate.yml/badge.svg)](https://github.com/KanakMalpani/loopnet/actions/workflows/validate.yml)
+[![Code: MIT](https://img.shields.io/badge/Code-MIT-yellow.svg)](LICENSE)
+[![Dataset: CC BY 4.0](https://img.shields.io/badge/Dataset-CC%20BY%204.0-green.svg)](DATACARD.md)
+[![Records](https://img.shields.io/badge/records-500-blue.svg)](data/seed/records.jsonl)
+[![Failure rate](https://img.shields.io/badge/failures-42%25-red.svg)](DATACARD.md)
+[![Hugging Face](https://img.shields.io/badge/HF-loopnet--seed--v0.1-yellow.svg)](https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1)
+
+<br>
+
+[**Load the dataset**](#load-in-one-minute) · [**Data card**](DATACARD.md) · [**Schema**](schema/loopnet-record-v1.json) · [**Labeling guide**](guides/LABELING-GUIDE.md)
+
+</div>
 
 ---
 
-## Why LoopNet matters
+## Why this exists
 
-Computer vision had ImageNet. Reinforcement learning had Atari and MuJoCo. **Loop engineering had nothing** — until now.
+Computer vision had ImageNet. RL had MuJoCo. **Loop engineering had no shared corpus.**
 
-| Question LoopNet answers | How |
-|--------------------------|-----|
-| What does a failed loop look like? | Labeled trajectories + `fail.*` codes |
-| Can we predict failure before burn? | Features + outcome labels per record |
-| Do benchmarks generalize? | Shared schema with [LoopBench](https://github.com/KanakMalpani/LoopBench) |
-| Can we replay without API cost? | [LoopGym](https://github.com/KanakMalpani/LoopGym) ReplayEnv integration |
+LoopNet fills that gap: every record is a complete loop story — spec, trajectory, outcome, LES breakdown, and when things break, a **`fail.*` code** from the [shared taxonomy](https://github.com/KanakMalpani/Loop-Core-Engineering/blob/main/specs/failure-taxonomy.md).
+
+---
+
+## What you can do with it
+
+| Use case | How LoopNet helps |
+|----------|-------------------|
+| **Failure prediction** | 42% labeled failures — models learn what breaking looks like |
+| **Benchmark generalization** | Same schema as [LoopBench](https://github.com/KanakMalpani/LoopBench) holdout (v0.2) |
+| **Zero-cost replay** | Feed [LoopGym](https://github.com/KanakMalpani/LoopGym) ReplayEnv — no API spend |
+| **Research & fine-tuning** | JSONL + Parquet + Hugging Face — train on loop structure, not chat logs |
+| **Community contributions** | [`ln/record-v1`](schema/loopnet-record-v1.json) schema + validation gate |
+
+---
+
+## Corpus at a glance (seed v0.1)
+
+| | |
+|---|---|
+| **Records** | 500 (400 train / 50 val / 50 test) |
+| **Failure rate** | 42% — deliberate, so success-only bias doesn't dominate |
+| **Schema** | `ln/record-v1` · pins `lss@1.0.0` + `les@1.0.0` |
+| **Source** | Synthetic v0.1 with known ground truth |
+| **License** | Code MIT · Dataset [CC BY 4.0](DATACARD.md) |
+
+---
+
+## Load in one minute
+
+**Hugging Face** (recommended):
+
+```python
+from datasets import load_dataset
+
+ds = load_dataset("KanakMalpani/loopnet-seed-v0.1", split="train")
+print(ds[0]["outcome"], ds[0]["pattern_slug"])
+```
+
+**Stream from GitHub** (no clone):
+
+```python
+ds = load_dataset(
+    "json",
+    data_files="https://raw.githubusercontent.com/KanakMalpani/loopnet/main/data/seed/records.jsonl",
+    split="train",
+)
+```
+
+**Replay in LoopGym:**
+
+```python
+import loopgym as lg
+
+env = lg.make("replay/loopnet-v1")
+obs = env.reset(record_id="ln-00042")  # trajectory from corpus
+```
 
 ---
 
@@ -43,95 +91,34 @@ Computer vision had ImageNet. Reinforcement learning had Atari and MuJoCo. **Loo
 
 ```mermaid
 flowchart LR
-  CORE[Loop Core Engineering<br/>LSS · LES · fail.*]
-  NET["LoopNet<br/><b>you are here</b>"]
+  CORE[Loop Core Engineering]
+  NET["<b>LoopNet</b><br/>you are here"]
   GYM[LoopGym ReplayEnv]
-  BENCH[LoopBench holdout v0.2]
+  BENCH[LoopBench holdout]
 
   CORE --> NET
   NET --> GYM
   NET -.-> BENCH
 ```
 
-| Repository | Role |
-|------------|------|
-| [Loop Core Engineering](https://github.com/KanakMalpani/Loop-Core-Engineering) | Spec pins & failure taxonomy |
-| **LoopNet** | Dataset layer |
-| [LoopGym](https://github.com/KanakMalpani/LoopGym) | Replays `records.jsonl` |
-| [LoopBench](https://github.com/KanakMalpani/LoopBench) | Downstream evaluation |
+| Layer | Repo |
+|-------|------|
+| Specs & failure codes | [Loop Core Engineering](https://github.com/KanakMalpani/Loop-Core-Engineering) |
+| **Dataset** | **LoopNet** |
+| Execution | [LoopGym](https://github.com/KanakMalpani/LoopGym) |
+| Public scores | [LoopBench](https://github.com/KanakMalpani/LoopBench) |
 
 ---
 
-## ⚡ Load in 3 lines
-
-**No clone required** — stream from GitHub:
-
-```python
-from datasets import load_dataset
-
-ds = load_dataset(
-    "json",
-    data_files="https://raw.githubusercontent.com/KanakMalpani/loopnet/main/data/seed/records.jsonl",
-    split="train",
-)
-print(ds[0]["outcome"], ds[0]["pattern_slug"])
-```
-
-**Local clone:**
-
-```bash
-git clone https://github.com/KanakMalpani/loopnet.git && cd loopnet
-pip install -r requirements.txt
-python scripts/validate_record.py --require-count 500
-```
-
-**After [Hugging Face publish](PUBLISHING.md):**
-
-```python
-ds = load_dataset("KanakMalpani/loopnet-seed-v0.1", split="train")
-```
-
----
-
-## Corpus snapshot (seed v0.1)
-
-| Metric | Value |
-|--------|-------|
-| Records | **500** |
-| Train / val / test | 400 / 50 / 50 |
-| Failure rate | **42.0%** (210 failures) |
-| Source | 100% synthetic (known ground truth) |
-| Schema | `ln/record-v1` |
-
-Regenerate deterministically:
-
-```bash
-python scripts/generate_seed.py --count 500 --seed 42
-python scripts/validate_record.py --require-count 500
-```
-
----
-
-## Repository layout
+## Repository map
 
 | Path | Purpose |
 |------|---------|
 | [`schema/loopnet-record-v1.json`](schema/loopnet-record-v1.json) | Canonical record schema |
 | [`data/seed/records.jsonl`](data/seed/records.jsonl) | Seed corpus |
-| [`data/seed/splits.json`](data/seed/splits.json) | Split manifest |
-| [`scripts/validate_record.py`](scripts/validate_record.py) | Schema + policy gate |
-| [`scripts/upload_hf.py`](scripts/upload_hf.py) | Parquet export + Hub upload |
-| [`DATACARD.md`](DATACARD.md) | Full dataset documentation |
-| [`guides/LABELING-GUIDE.md`](guides/LABELING-GUIDE.md) | Labeling for v1.0 community data |
-
----
-
-## License
-
-| Component | License |
-|-----------|---------|
-| Code (scripts, schema, builders) | [MIT](LICENSE) |
-| Dataset (`data/seed/`) | [CC BY 4.0](DATACARD.md) |
+| [`scripts/validate_record.py`](scripts/validate_record.py) | Schema + policy validation |
+| [`scripts/generate_seed.py`](scripts/generate_seed.py) | Deterministic regeneration (`--seed 42`) |
+| [`DATACARD.md`](DATACARD.md) | Full documentation |
 
 ---
 
@@ -142,12 +129,12 @@ python scripts/validate_record.py --require-count 500
   title={LoopNet Seed Corpus v0.1},
   author={Malpani, Kanak},
   year={2026},
-  url={https://github.com/KanakMalpani/loopnet}
+  url={https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1}
 }
 ```
 
----
+<div align="center">
 
-<p align="center">
-  <sub>Contributions welcome · <a href="CONTRIBUTING.md">Contributing</a> · <a href="SECURITY.md">Security</a> · <a href="STATUS.md">Status</a></sub>
-</p>
+<sub><a href="CONTRIBUTING.md">Contributing</a> · <a href="SECURITY.md">Security</a> · <a href="STATUS.md">Status</a></sub>
+
+</div>
