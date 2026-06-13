@@ -23,7 +23,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install jsonschema pandas pyarrow huggingface_hub
 
       - name: Validate corpus
         run: python scripts/validate_record.py --require-count 500
@@ -32,9 +32,9 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          set -e
-          ARGS="--export-parquet --upload --repo-id ${{ github.event.inputs.repo_id }}"
-          if [ "${{ github.event.inputs.private }}" = "true" ]; then
-            ARGS="$ARGS --private"
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::Add HF_TOKEN to repository secrets (see PUBLISHING.md)"
+            exit 1
           fi
-          python scripts/upload_hf.py $ARGS
+          python scripts/upload_hf.py --export-parquet --upload --repo-id "${{ github.event.inputs.repo_id }}" \
+            ${{ github.event.inputs.private == 'true' && '--private' || '' }}

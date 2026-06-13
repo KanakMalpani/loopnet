@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "LoopNet — large-scale dataset of loop designs, trajectories, and outcomes"
 readme = "README.md"
 requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Kanak Malpani" }]
 dependencies = [
     "jsonschema>=4.21",
 ]
@@ -14,8 +16,6 @@ Repository = "https://github.com/KanakMalpani/loopnet"
 Documentation = "https://github.com/KanakMalpani/loopnet/blob/main/DATACARD.md"
 "Loop Core Engineering" = "https://github.com/KanakMalpani/Loop-Core-Engineering"
 "LoopGym" = "https://github.com/KanakMalpani/LoopGym"
-
-# Spec pins (01-loop-engineering-core): lss@1.0.0, les@1.0.0 — see schema spec_pins field
 
 [project.optional-dependencies]
 dev = [
@@ -30,6 +30,13 @@ notebook = [
     "matplotlib>=3.9",
     "jupyter>=1.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["loopnet"]
 
 [tool.ruff]
 line-length = 100
