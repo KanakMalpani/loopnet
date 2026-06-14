@@ -43,7 +43,12 @@ def load_records(path: Path) -> list[dict]:
     raise ValueError(f"{path}: expected JSONL, JSON array, or object with 'records' key")
 
 
-def validate_records(records: list[dict], *, schema: dict | None = None) -> list[str]:
+def validate_records(
+    records: list[dict],
+    *,
+    schema: dict | None = None,
+    enforce_failure_ratio: bool = True,
+) -> list[str]:
     schema = schema or load_schema()
     validator = Draft202012Validator(schema)
     errors: list[str] = []
@@ -70,7 +75,7 @@ def validate_records(records: list[dict], *, schema: dict | None = None) -> list
         if record.get("outcome") == "failure":
             failure_count += 1
 
-    if records:
+    if records and enforce_failure_ratio:
         failure_ratio = failure_count / len(records)
         if failure_ratio < 0.40:
             errors.append(
@@ -95,6 +100,11 @@ def main(argv: list[str] | None = None) -> int:
         type=int,
         default=None,
         help="Fail if total record count differs from expected value",
+    )
+    parser.add_argument(
+        "--skip-corpus-policy",
+        action="store_true",
+        help="Skip corpus-level failure-ratio check (for single captured files)",
     )
     args = parser.parse_args(argv)
 
@@ -124,7 +134,11 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    errors = validate_records(all_records, schema=schema)
+    errors = validate_records(
+        all_records,
+        schema=schema,
+        enforce_failure_ratio=not args.skip_corpus_policy,
+    )
     if errors:
         print(f"Validation failed ({len(errors)} issue(s)):", file=sys.stderr)
         for error in errors[:50]:

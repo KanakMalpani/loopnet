@@ -2,13 +2,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Phase** | v0.1 shipped |
-| **Symbol** | ✅ |
-| **Started** | 2026-06-13 |
-| **Shipped** | 2026-06-13 |
-| **Owner** | — |
-| **Blockers** | — |
-| **Notes** | Published at https://github.com/KanakMalpani/loopnet |
+| **Phase** | v0.2 in progress |
+| **Symbol** | 🔄 |
+| **Notes** | HF seed v0.1 live; 45 captured records merged locally (545 total) |
 
 ## Completion checklist
 
@@ -23,6 +19,9 @@
 - [x] `datasets/loopnet/loopnet.py` (HuggingFace builder)
 - [x] CI: validate workflow
 - [x] `SYNC.md` — canonical source policy
+- [x] `loopgym capture` pipeline + `data/captured/` (45 records)
+- [x] `scripts/merge_corpus.py` → `data/v0.2/records.jsonl` (545 records, 40% failures)
+- [ ] Hugging Face upload `loopnet-v0.2`
 
 ## Corpus stats (seed v0.1)
 

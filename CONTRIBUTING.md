@@ -21,10 +21,32 @@ python scripts/generate_seed.py --count 500 --seed 42
 python scripts/validate_record.py --require-count 500
 ```
 
-## Data contributions (v1.0+)
+## v0.2 captured data (LoopGym → LoopNet)
 
-Community submissions will follow the labeling guide in [`guides/LABELING-GUIDE.md`](guides/LABELING-GUIDE.md). v0.1 is synthetic-only.
+See [V0.2-PLAN.md](V0.2-PLAN.md). Capture real trajectories:
+
+```bash
+pip install loopgym
+
+loopgym capture loopbench/code-repair-v1 \
+  --task-ids cr-001,cr-002,cr-003 \
+  --seeds 0,1,2,3,4 \
+  --failure-seeds 2,3,4 \
+  -o data/captured/code-repair-v1.jsonl
+
+python scripts/validate_record.py data/captured/code-repair-v1.jsonl --skip-corpus-policy
+python scripts/merge_corpus.py --validate
+```
+
+## Community submissions (v0.3+)
+
+Follow [`guides/LABELING-GUIDE.md`](guides/LABELING-GUIDE.md). PR checklist:
+
+1. JSONL validates with `validate_record.py --skip-corpus-policy`
+2. No secrets or PII
+3. `source: community` and optional `contributor.handle`
+4. Dataset license: CC BY 4.0
 
 ## License
 
-Code contributions: MIT. Dataset contributions: CC BY 4.0 (see [DATACARD.md](DATACARD.md)).
+Code contributions: MIT. Dataset contributions: CC BY 4.0 (see [DATACARD.md](DATACARD.md).
