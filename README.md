@@ -11,9 +11,10 @@ Structured loop designs, execution trajectories, outcomes, and failure modes —
 [![CI](https://github.com/KanakMalpani/loopnet/actions/workflows/validate.yml/badge.svg)](https://github.com/KanakMalpani/loopnet/actions/workflows/validate.yml)
 [![Code: MIT](https://img.shields.io/badge/Code-MIT-yellow.svg)](LICENSE)
 [![Dataset: CC BY 4.0](https://img.shields.io/badge/Dataset-CC%20BY%204.0-green.svg)](DATACARD.md)
-[![Records](https://img.shields.io/badge/records-500-blue.svg)](data/seed/records.jsonl)
-[![Failure rate](https://img.shields.io/badge/failures-42%25-red.svg)](DATACARD.md)
-[![Hugging Face](https://img.shields.io/badge/HF-loopnet--seed--v0.1-yellow.svg)](https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1)
+[![Records](https://img.shields.io/badge/records-545-blue.svg)](data/v0.2/records.jsonl)
+[![Failure rate](https://img.shields.io/badge/failures-40%25-red.svg)](DATACARD.md)
+[![Hugging Face v0.2](https://img.shields.io/badge/HF-loopnet--v0.2-yellow.svg)](https://huggingface.co/datasets/KanakMalpani/loopnet-v0.2)
+[![Hugging Face v0.1](https://img.shields.io/badge/HF-seed--v0.1-lightgrey.svg)](https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1)
 
 <br>
 
@@ -43,27 +44,35 @@ LoopNet fills that gap: every record is a complete loop story — spec, trajecto
 
 ---
 
-## Corpus at a glance (seed v0.1)
+## Corpus at a glance (v0.2)
 
 | | |
 |---|---|
-| **Records** | 500 (400 train / 50 val / 50 test) |
-| **Failure rate** | 42% — deliberate, so success-only bias doesn't dominate |
+| **Records** | 545 (500 seed + 45 captured LoopGym runs) |
+| **Failure rate** | 40% — meets corpus policy |
 | **Schema** | `ln/record-v1` · pins `lss@1.0.0` + `les@1.0.0` |
-| **Source** | Synthetic v0.1 with known ground truth |
+| **Source** | Synthetic seed + SimEnv captures (3 LoopBench envs) |
 | **License** | Code MIT · Dataset [CC BY 4.0](DATACARD.md) |
+
+Seed-only v0.1 (500 records) remains at [`loopnet-seed-v0.1`](https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1).
 
 ---
 
 ## Load in one minute
 
-**Hugging Face** (recommended):
+**Hugging Face** (recommended — v0.2):
 
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("KanakMalpani/loopnet-seed-v0.1", split="train")
+ds = load_dataset("KanakMalpani/loopnet-v0.2", split="train")
 print(ds[0]["outcome"], ds[0]["pattern_slug"])
+```
+
+**Seed-only v0.1:**
+
+```python
+ds = load_dataset("KanakMalpani/loopnet-seed-v0.1", split="train")
 ```
 
 **Stream from GitHub** (no clone):
@@ -125,11 +134,11 @@ flowchart LR
 ## Citation
 
 ```bibtex
-@dataset{loopnet_seed_v01,
-  title={LoopNet Seed Corpus v0.1},
+@dataset{loopnet_v02,
+  title={LoopNet v0.2},
   author={Malpani, Kanak},
   year={2026},
-  url={https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1}
+  url={https://huggingface.co/datasets/KanakMalpani/loopnet-v0.2}
 }
 ```
 
