@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare LoopNet seed corpus for HuggingFace Hub upload (optional)."""
+"""Prepare LoopNet corpus for HuggingFace Hub upload (optional)."""
 
 from __future__ import annotations
 
@@ -12,6 +12,76 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_JSONL = ROOT / "data" / "seed" / "records.jsonl"
 DEFAULT_PARQUET = ROOT / "data" / "seed" / "records.parquet"
 DEFAULT_README = ROOT / "data" / "seed" / "README.md"
+
+
+def write_dataset_card(
+    readme_path: Path, *, repo_id: str, record_count: int | None = None
+) -> None:
+    readme_path.parent.mkdir(parents=True, exist_ok=True)
+    is_v02 = "v0.2" in repo_id or "loopnet-v0.2" in repo_id
+    title = "LoopNet v0.2" if is_v02 else "LoopNet Seed v0.1"
+    blurb = (
+        "Seed corpus plus captured LoopGym trajectories for [LoopNet]"
+        if is_v02
+        else "Synthetic seed corpus for [LoopNet]"
+    )
+    cite_key = "loopnet_v02" if is_v02 else "loopnet_seed_v01"
+
+    readme_path.write_text(
+        f"""---
+language:
+- en
+license: cc-by-4.0
+task_categories:
+- text-classification
+- other
+tags:
+- loop-engineering
+- agents
+- benchmarks
+size_categories:
+- n<1K
+---
+
+# {title}
+
+{blurb}(https://github.com/KanakMalpani/loopnet).
+
+## Load
+
+```python
+from datasets import load_dataset
+
+ds = load_dataset("{repo_id}", split="train")
+```
+
+Or from JSONL in this repo:
+
+```python
+ds = load_dataset("json", data_files="records.jsonl", split="train")
+```
+
+## Schema
+
+Records conform to `ln/record-v1` (see `schema/loopnet-record-v1.json`).
+
+## Records
+
+{record_count or "See records.jsonl"} records in this release.
+
+## Citation
+
+```bibtex
+@dataset{{{cite_key},
+  title={{{title}}},
+  year={{2026}},
+  publisher={{Loop Engineering}}
+}}
+```
+""",
+        encoding="utf-8",
+    )
+    print(f"Wrote dataset card to {readme_path}")
 
 
 def export_parquet(jsonl_path: Path, parquet_path: Path) -> None:
@@ -33,61 +103,6 @@ def export_parquet(jsonl_path: Path, parquet_path: Path) -> None:
     parquet_path.parent.mkdir(parents=True, exist_ok=True)
     frame.to_parquet(parquet_path, index=False)
     print(f"Wrote {len(records)} records to {parquet_path}")
-
-
-def write_dataset_card(readme_path: Path) -> None:
-    readme_path.parent.mkdir(parents=True, exist_ok=True)
-    readme_path.write_text(
-        """---
-language:
-- en
-license: cc-by-4.0
-task_categories:
-- text-classification
-- other
-tags:
-- loop-engineering
-- agents
-- benchmarks
-size_categories:
-- n<1K
----
-
-# LoopNet Seed v0.1
-
-Synthetic seed corpus for [LoopNet](https://github.com/KanakMalpani/loopnet).
-
-## Load
-
-```python
-from datasets import load_dataset
-
-ds = load_dataset("KanakMalpani/loopnet-seed-v0.1", split="train")
-```
-
-Or from JSONL in this repo:
-
-```python
-ds = load_dataset("json", data_files="records.jsonl", split="train")
-```
-
-## Schema
-
-Records conform to `ln/record-v1` (see `schema/loopnet-record-v1.json`).
-
-## Citation
-
-```bibtex
-@dataset{loopnet_seed_v01,
-  title={LoopNet Seed Corpus v0.1},
-  year={2026},
-  publisher={Loop Engineering}
-}
-```
-""",
-        encoding="utf-8",
-    )
-    print(f"Wrote dataset card to {readme_path}")
 
 
 def upload_to_hub(
@@ -142,10 +157,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if not args.jsonl.exists():
-        print(f"Missing seed file: {args.jsonl}", file=sys.stderr)
+        print(f"Missing JSONL file: {args.jsonl}", file=sys.stderr)
         return 1
 
-    write_dataset_card(args.readme)
+    record_count = sum(
+        1 for line in args.jsonl.read_text(encoding="utf-8").splitlines() if line.strip()
+    )
+    if args.parquet == DEFAULT_PARQUET and args.jsonl != DEFAULT_JSONL:
+        args.parquet = args.jsonl.with_suffix(".parquet")
+    if args.readme == DEFAULT_README and args.jsonl != DEFAULT_JSONL:
+        args.readme = args.jsonl.parent / "README.md"
+
+    write_dataset_card(args.readme, repo_id=args.repo_id, record_count=record_count)
 
     if args.export_parquet or args.upload:
         export_parquet(args.jsonl, args.parquet)
