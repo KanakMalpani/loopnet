@@ -2,9 +2,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Phase** | v0.2 live on Hugging Face |
+| **Phase** | v0.2 complete — tutorial shipped |
 | **Symbol** | ✅ |
-| **Notes** | HF `loopnet-v0.2` published (545 records: 500 seed + 45 captured) |
+| **Notes** | HF `loopnet-v0.2` live; ReplayEnv + [end-to-end tutorial](guides/END-TO-END-TUTORIAL.md) |
 
 ## Completion checklist
 
@@ -22,6 +22,7 @@
 - [x] `loopgym capture` pipeline + `data/captured/` (45 records)
 - [x] `scripts/merge_corpus.py` → `data/v0.2/records.jsonl` (545 records, 40% failures)
 - [x] Hugging Face upload `loopnet-v0.2` — [KanakMalpani/loopnet-v0.2](https://huggingface.co/datasets/KanakMalpani/loopnet-v0.2)
+- [x] [End-to-end tutorial](guides/END-TO-END-TUTORIAL.md) + `examples/v02_workflow.py`
 
 ## Corpus stats (seed v0.1)
 

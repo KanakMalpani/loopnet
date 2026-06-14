@@ -18,7 +18,7 @@ Structured loop designs, execution trajectories, outcomes, and failure modes —
 
 <br>
 
-[**Load the dataset**](#load-in-one-minute) · [**Data card**](DATACARD.md) · [**Schema**](schema/loopnet-record-v1.json) · [**Labeling guide**](guides/LABELING-GUIDE.md)
+[**Load the dataset**](#load-in-one-minute) · [**End-to-end tutorial**](guides/END-TO-END-TUTORIAL.md) · [**Data card**](DATACARD.md) · [**Schema**](schema/loopnet-record-v1.json)
 
 </div>
 
