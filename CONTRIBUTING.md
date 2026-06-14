@@ -38,15 +38,15 @@ python scripts/validate_record.py data/captured/code-repair-v1.jsonl --skip-corp
 python scripts/merge_corpus.py --validate
 ```
 
-## Community submissions (v0.3+)
+## Community submissions
 
-Follow [`guides/LABELING-GUIDE.md`](guides/LABELING-GUIDE.md). PR checklist:
+See **[guides/COMMUNITY-SUBMISSION.md](guides/COMMUNITY-SUBMISSION.md)**. Summary:
 
-1. JSONL validates with `validate_record.py --skip-corpus-policy`
-2. No secrets or PII
-3. `source: community` and optional `contributor.handle`
-4. Dataset license: CC BY 4.0
+1. Add `submissions/community/{your-handle}.jsonl`
+2. `python scripts/validate_community.py submissions/community/your-handle.jsonl`
+3. Use the **community_records** PR template
+4. Every record: `source: community`, `contributor.handle`, CC BY 4.0, no secrets/PII
 
 ## License
 
-Code contributions: MIT. Dataset contributions: CC BY 4.0 (see [DATACARD.md](DATACARD.md).
+Code contributions: MIT. Dataset contributions: CC BY 4.0 (see [DATACARD.md](DATACARD.md)).

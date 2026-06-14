@@ -18,7 +18,7 @@ Structured loop designs, execution trajectories, outcomes, and failure modes —
 
 <br>
 
-[**Load the dataset**](#load-in-one-minute) · [**End-to-end tutorial**](guides/END-TO-END-TUTORIAL.md) · [**Data card**](DATACARD.md) · [**Schema**](schema/loopnet-record-v1.json)
+[**Load the dataset**](#load-in-one-minute) · [**End-to-end tutorial**](guides/END-TO-END-TUTORIAL.md) · [**Contribute records**](guides/COMMUNITY-SUBMISSION.md) · [**Data card**](DATACARD.md)
 
 </div>
 
@@ -40,7 +40,7 @@ LoopNet fills that gap: every record is a complete loop story — spec, trajecto
 | **Benchmark generalization** | Same schema as [LoopBench](https://github.com/KanakMalpani/LoopBench) holdout (v0.2) |
 | **Zero-cost replay** | Feed [LoopGym](https://github.com/KanakMalpani/LoopGym) ReplayEnv — no API spend |
 | **Research & fine-tuning** | JSONL + Parquet + Hugging Face — train on loop structure, not chat logs |
-| **Community contributions** | [`ln/record-v1`](schema/loopnet-record-v1.json) schema + validation gate |
+| **Community contributions** | [`ln/record-v1`](schema/loopnet-record-v1.json) + [submission guide](guides/COMMUNITY-SUBMISSION.md) |
 
 ---
 
@@ -115,6 +115,7 @@ flowchart LR
 | Specs & failure codes | [Loop Core Engineering](https://github.com/KanakMalpani/Loop-Core-Engineering) |
 | **Dataset** | **LoopNet** |
 | Execution | [LoopGym](https://github.com/KanakMalpani/LoopGym) |
+| Observability | [loop-observability](https://github.com/KanakMalpani/loop-observability) |
 | Public scores | [LoopBench](https://github.com/KanakMalpani/LoopBench) |
 
 ---
@@ -127,7 +128,8 @@ flowchart LR
 | [`data/seed/records.jsonl`](data/seed/records.jsonl) | Seed corpus |
 | [`scripts/validate_record.py`](scripts/validate_record.py) | Schema + policy validation |
 | [`scripts/generate_seed.py`](scripts/generate_seed.py) | Deterministic regeneration (`--seed 42`) |
-| [`DATACARD.md`](DATACARD.md) | Full documentation |
+| [`guides/COMMUNITY-SUBMISSION.md`](guides/COMMUNITY-SUBMISSION.md) | Contribute records via PR |
+| [`submissions/community/`](submissions/community/) | Community JSONL inbox |
 
 ---
 

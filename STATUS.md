@@ -23,6 +23,7 @@
 - [x] `scripts/merge_corpus.py` → `data/v0.2/records.jsonl` (545 records, 40% failures)
 - [x] Hugging Face upload `loopnet-v0.2` — [KanakMalpani/loopnet-v0.2](https://huggingface.co/datasets/KanakMalpani/loopnet-v0.2)
 - [x] [End-to-end tutorial](guides/END-TO-END-TUTORIAL.md) + `examples/v02_workflow.py`
+- [x] [Community submission guide](guides/COMMUNITY-SUBMISSION.md) + PR template + CI validation
 
 ## Corpus stats (seed v0.1)
 
