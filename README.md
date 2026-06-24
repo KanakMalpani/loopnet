@@ -96,6 +96,12 @@ obs = env.reset(record_id="ln-00042")  # trajectory from corpus
 
 ---
 
+## Validate and reproduce
+
+Explored this corpus? Post on the [reproduction challenge](https://github.com/KanakMalpani/Loop-Engineering/discussions/10) after [REPRODUCE.md](https://github.com/KanakMalpani/Loop-Engineering/blob/main/contributions/REPRODUCE.md).
+
+---
+
 ## Where it sits
 
 ```mermaid
