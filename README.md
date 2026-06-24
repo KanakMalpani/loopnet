@@ -54,7 +54,7 @@ LoopNet fills that gap: every record is a complete loop story — spec, trajecto
 | **Source** | Synthetic seed + SimEnv captures (3 LoopBench envs) |
 | **License** | Code MIT · Dataset [CC BY 4.0](DATACARD.md) |
 
-Seed-only v0.1 (500 records) remains at [`loopnet-seed-v0.1`](https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1).
+**Version registry:** [ECOSYSTEM_VERSIONS.md](https://github.com/KanakMalpani/Loop-Engineering/blob/main/ECOSYSTEM_VERSIONS.md). Seed-only v0.1 (500 records) remains at [`loopnet-seed-v0.1`](https://huggingface.co/datasets/KanakMalpani/loopnet-seed-v0.1).
 
 ---
 
