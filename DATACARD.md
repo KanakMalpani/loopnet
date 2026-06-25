@@ -141,4 +141,5 @@ Deterministic with `--seed 42`.
 
 | Version | Change |
 |---------|--------|
+| 0.3-preview | Loop Trace 1.0 flat export schema (`record-v0.3.json`), validate_trace_export.py, dry-run preview row |
 | 0.1.0 | Initial schema, 500 synthetic records, validation tooling |
