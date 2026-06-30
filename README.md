@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="assets/ponytail-banner.png" alt="Ponytail Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px;" />
-
 # LoopNet
 
 **Ground truth for self-improving systems.**
@@ -34,22 +32,21 @@ LoopNet fills that gap: every record is a complete loop story — spec, trajecto
 
 ---
 
-## 📊 The "Ponytail" Efficiency Dividend
+## Corpus overview
 
-By structuring your systems into formal closed loops with **LoopForge** and **LoopGym**, and applying optimal "ponytail" style compiler compression, you shed token bloat, latency, and costs while remaining 100% safe.
+545 structured loop trajectories — outcomes, LES breakdowns, and labeled failures for replay and research.
 
 <div align="center">
-  <img src="assets/benchmark-graph.png" alt="Loop Engineering Performance Metrics" width="90%" style="border-radius: 8px; margin-bottom: 10px;" />
-  <p><i>Every metric vs the no-skill baseline (Claude Code, Haiku 4.5, 12 tasks)</i></p>
+  <img src="assets/corpus-overview.svg" alt="LoopNet v0.2 corpus breakdown" width="92%" />
 </div>
 
-### Metrics vs. No-Skill Baseline
-
-| Strategy | Lines of Code (LOC) | Token Usage | API Cost | Latency (Time) | Safety |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **ponytail** (Optimal Loop) | **-54%** | **-22%** | **-20%** | **-27%** | **100%** |
-| **caveman** (Terse Prose) | -20% | +7% | +3% | +2% | 100% |
-| **YAGNI + One-Liners** | -33% | -14% | -21% | -30% | 95% |
+| Stat | Value |
+| :--- | ---: |
+| Total records | **545** |
+| Labeled failures | **40%** (218 records) |
+| Seed corpus | 500 synthetic |
+| Captured SimEnv runs | 45 |
+| Load time | one Hugging Face line |
 
 ---
 
