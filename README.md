@@ -30,6 +30,8 @@ Computer vision had ImageNet. RL had MuJoCo. **Loop engineering had no shared co
 
 LoopNet fills that gap: every record is a complete loop story — spec, trajectory, outcome, LES breakdown, and when things break, a **`fail.*` code** from the [shared taxonomy](https://github.com/KanakMalpani/Loop-Core-Engineering/blob/main/specs/failure-taxonomy.md).
 
+**Why it matters beyond storage:** train failure predictors, replay trajectories for **$0**, benchmark generalization against LoopBench holdouts, and publish research on *loop structure* — not scraped chat logs.
+
 ---
 
 ## Corpus overview
