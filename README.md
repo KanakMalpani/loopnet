@@ -37,7 +37,7 @@ LoopNet fills that gap: every record is a complete loop story — spec, trajecto
 545 structured loop trajectories — outcomes, LES breakdowns, and labeled failures for replay and research.
 
 <div align="center">
-  <img src="assets/corpus-overview.svg" alt="LoopNet v0.2 corpus breakdown" width="92%" />
+  <img src="assets/corpus-overview.png" alt="LoopNet v0.2 corpus breakdown" width="92%" />
 </div>
 
 | Stat | Value |
